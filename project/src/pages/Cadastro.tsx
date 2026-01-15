@@ -53,51 +53,45 @@ function Cadastro() {
         ip_address: clientIp
       };
 
-      // Tenta inserir no banco de dados REAL
-      const response: any = await supabase
+      // CORREÇÃO AQUI: 'as any' para evitar erro de tipagem estrita
+      const response = await supabase
         .from('registrations')
-        .insert([sanitizedData])
+        .insert([sanitizedData] as any) 
         .select()
         .single();
 
       const data = response.data;
       const insertError = response.error;
 
-      // Se houver erro, NÃO DEIXA PASSAR
       if (insertError) {
-        console.error('Erro Supabase:', insertError);
-        
+        console.error('Erro ao cadastrar:', insertError);
         if (insertError.code === '23505') {
-           setError('Este email já está cadastrado. Tente outro.');
+           setError('Este email já está cadastrado. Por favor, use outro.');
         } else {
-           setError('Erro ao realizar cadastro. Tente novamente mais tarde.');
+           setError('Erro no sistema ao cadastrar. Tente novamente.');
         }
-        
         trackFormSubmit('cadastro', false, insertError.message);
         setLoading(false);
-        return; // Para a execução aqui
+        return;
       }
 
-      // Só chega aqui se o cadastro foi REALMENTE criado
       if (data) {
+        // @ts-ignore
         localStorage.setItem('registration_id', data.id);
-        proceedToNextStep();
+        trackFormSubmit('cadastro', true);
+        setSuccess(true);
+        setFormData({ nomeCompleto: '', email: '', whatsapp: '' });
+
+        setTimeout(() => {
+          navigate('/questionario');
+        }, 1500);
       }
 
     } catch (err) {
-      console.error('Erro geral:', err);
+      console.error('Erro de conexão:', err);
       setError('Erro de conexão. Verifique sua internet.');
       setLoading(false);
     }
-  };
-
-  const proceedToNextStep = () => {
-    trackFormSubmit('cadastro', true);
-    setSuccess(true);
-    setFormData({ nomeCompleto: '', email: '', whatsapp: '' });
-    setTimeout(() => {
-      navigate('/questionario');
-    }, 1500);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

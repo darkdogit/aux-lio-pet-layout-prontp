@@ -1,24 +1,37 @@
-import { Award, Stethoscope, Syringe, Pill, Activity, ShoppingBag, ArrowRight, Info, HeartPulse, Search, Banknote, CheckCircle2, ChevronRight } from 'lucide-react';
+import { 
+  Award, Stethoscope, Syringe, Pill, Activity, ShoppingBag, 
+  ArrowRight, HeartPulse, Banknote, CheckCircle2, ChevronRight, 
+  ChevronDown, Menu, X 
+} from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SEO } from '../components/SEO';
-import { useState, useEffect } from 'react';
 import { useAnalytics } from '../hooks/useAnalytics';
 
 // URL do Logo de SP
 const SP_LOGO_URL = "/sp.jpeg"; 
+// URL do Ícone de Libras
+const LIBRAS_ICON_URL = "/access_icon.png";
 
 function Home() {
   const navigate = useNavigate();
-  const [scrollY, setScrollY] = useState(0);
-  const { trackButtonClick } = useAnalytics('home');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  useAnalytics('home'); 
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Links do menu Gov.br
+  const govLinks = [
+    { text: 'Serviços', url: 'https://www.gov.br/pt-br/servicos' },
+    { text: 'Temas em Destaque', url: 'https://www.gov.br/pt-br/temas' },
+    { text: 'Notícias', url: 'https://www.gov.br/pt-br/noticias' },
+    { text: 'Galeria de Aplicativos', url: 'https://www.gov.br/pt-br/galeria-de-aplicativos' },
+    { text: 'Acompanhe o Planalto', url: 'https://www.gov.br/planalto/pt-br' },
+    { text: 'Navegação', url: 'https://www.gov.br/pt-br/navegacao' },
+    { text: 'Consultar Minhas Solicitações', url: 'https://www.gov.br/pt-br/consultar-minhas-solicitacoes' },
+    { text: 'Órgãos do Governo', url: 'https://www.gov.br/pt-br/orgaos-do-governo' },
+    { text: 'Por Dentro do Gov.br', url: 'https://www.gov.br/pt-br/por-dentro-do-gov-br' },
+    { text: 'Canais do Executivo Federal', url: 'https://www.gov.br/pt-br/canais-do-executivo-federal' },
+    { text: 'Dados do Governo Federal', url: 'https://dados.gov.br' },
+  ];
 
   return (
     <>
@@ -27,6 +40,50 @@ function Home() {
         description="Programa de proteção animal da Secretaria do Meio Ambiente e Defesa Animal. Apoio financeiro para saúde e alimentação pet."
         keywords="auxilio pet, são paulo, governo sp, ajuda animal, cadastro pet"
       />
+
+      {/* --- MENU LATERAL (DRAWER) --- */}
+      <div 
+        className={`fixed inset-0 bg-black/60 z-[60] transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setIsMenuOpen(false)}
+      />
+
+      <div 
+        className={`fixed top-0 left-0 h-full w-[320px] max-w-[85vw] bg-[#071D41] text-white z-[70] transform transition-transform duration-300 ease-in-out shadow-2xl overflow-y-auto ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <div className="p-4 border-b border-[#14325c] bg-white text-[#333] flex justify-between items-center sticky top-0 z-10">
+          <span className="font-bold text-sm uppercase text-[#1351B4] flex items-center gap-2">
+            <Menu size={18} /> Menu
+          </span>
+          <button 
+            onClick={() => setIsMenuOpen(false)}
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X size={24} className="text-[#333]" />
+          </button>
+        </div>
+
+        <div className="p-6">
+          <div className="mb-8 border-b border-[#14325c] pb-6">
+            <span className="text-sm text-gray-300 block mb-2 font-medium">Serviços e Informações do Brasil</span>
+            <span className="text-5xl font-black tracking-tighter block">gov.br</span>
+          </div>
+
+          <nav className="flex flex-col">
+            {govLinks.map((link, index) => (
+              <a 
+                key={index} 
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer" 
+                className="py-4 border-b border-[#14325c] flex justify-between items-center font-bold text-sm uppercase hover:bg-white/5 transition-colors group text-white"
+              >
+                {link.text}
+                <ChevronDown size={16} className="text-white/70 group-hover:text-white transition-colors" />
+              </a>
+            ))}
+          </nav>
+        </div>
+      </div>
       
       <div className="min-h-screen flex flex-col bg-white font-sans text-[#333]">
         
@@ -37,34 +94,55 @@ function Home() {
         <div className="w-full h-[4px] bg-gradient-to-r from-red-600 via-white to-black"></div>
 
         {/* --- HEADER PRINCIPAL --- */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
           <div className="container mx-auto px-4 py-3 md:py-0 md:h-28 flex items-center justify-between gap-2">
-            <div 
-              onClick={() => navigate('/')} 
-              className="flex items-center gap-2 md:gap-4 cursor-pointer flex-1"
-            >
-              <img 
-                src={SP_LOGO_URL} 
-                alt="Governo de São Paulo" 
-                className="h-10 md:h-16 w-auto object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'; 
-                }}
-              />
+            <div className="flex items-center gap-2 sm:gap-4 flex-1">
               
-              <div className="h-8 md:h-12 w-px bg-gray-300 mx-1 hidden md:block"></div>
+              {/* BOTÃO HAMBURGUER */}
+              <button 
+                onClick={() => setIsMenuOpen(true)}
+                className="flex items-center gap-2 text-[#1351B4] hover:bg-blue-50 px-2 sm:px-3 py-2 rounded-lg transition-colors group"
+              >
+                <Menu size={28} strokeWidth={2.5} />
+                <span className="font-bold text-sm uppercase hidden md:inline-block">Menu</span>
+              </button>
 
-              <div className="flex flex-col justify-center">
-                <span className="text-[#333] font-semibold text-[10px] md:text-sm leading-tight uppercase tracking-wide">
-                  Secretaria do
-                </span>
-                <span className="text-[#333] font-black text-xs md:text-2xl tracking-tight leading-none uppercase">
-                  Meio Ambiente<br/>e Defesa Animal
-                </span>
+              <div 
+                onClick={() => navigate('/')} 
+                className="flex items-center gap-2 md:gap-4 cursor-pointer"
+              >
+                <img 
+                  src={SP_LOGO_URL} 
+                  alt="Governo de São Paulo" 
+                  className="h-8 sm:h-10 md:h-16 w-auto object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'; 
+                  }}
+                />
+                
+                <div className="h-8 md:h-12 w-px bg-gray-300 mx-1 hidden md:block"></div>
+
+                {/* TEXTO SECRETARIA (OCULTO NO MOBILE PARA NÃO TAMPAR O ÍCONE) */}
+                <div className="hidden md:flex flex-col justify-center">
+                  <span className="text-[#333] font-semibold text-[10px] md:text-sm leading-tight uppercase tracking-wide">
+                    Secretaria do
+                  </span>
+                  <span className="text-[#333] font-black text-xs md:text-2xl tracking-tight leading-none uppercase">
+                    Meio Ambiente<br/>e Defesa Animal
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 shrink-0">
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+              
+              {/* ÍCONE DE LIBRAS (AJUSTADO PARA NÃO TAMPAR NADA) */}
+              <img 
+                src={LIBRAS_ICON_URL}
+                alt="Acessível em Libras"
+                className="w-8 h-8 md:w-10 md:h-10 cursor-pointer hover:opacity-90 transition-opacity"
+              />
+
               <div className="hidden lg:block text-right mr-4">
                 <span className="block text-xs text-gray-500 font-bold uppercase">Programa</span>
                 <span className="block text-[#1351B4] font-bold text-lg">Auxílio Pet</span>
@@ -79,16 +157,12 @@ function Home() {
           </div>
         </header>
 
-        {/* --- MENU DE SERVIÇOS  --- */}
-        
-
         <main className="flex-1 pb-16">
           
           {/* --- DESTAQUE / HERO --- */}
           <section className="container mx-auto px-4 py-8">
             <div className="grid lg:grid-cols-2 gap-8">
               
-              {/* Destaque Principal */}
               <div className="relative group cursor-pointer" onClick={() => navigate('/cadastro')}>
                 <div className="overflow-hidden rounded border border-gray-200 shadow-sm">
                   <img 
@@ -101,7 +175,6 @@ function Home() {
                   <span className="text-[#1351B4] font-bold text-xs uppercase tracking-wider mb-1 block">Programa Estadual</span>
                   <h1 className="text-3xl md:text-4xl font-black text-[#333] group-hover:text-[#1351B4] transition-colors leading-tight mb-2">
                     Inscrições abertas para o Auxílio Pet SP 2026
-
                   </h1>
                   <p className="text-gray-600 text-lg leading-relaxed">
                     Famílias de baixa renda do estado já podem solicitar o benefício para custeio de alimentação e saúde veterinária.
@@ -109,10 +182,8 @@ function Home() {
                 </div>
               </div>
 
-              {/* Cards Laterais */}
               <div className="flex flex-col gap-6">
                 
-                {/* CARD DO DINHEIRO */}
                 <div className="bg-[#1351B4] text-white p-8 rounded shadow-lg flex flex-col justify-center relative overflow-hidden group cursor-pointer hover:bg-[#0c326f] transition-colors" onClick={() => navigate('/cadastro')}>
                   <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-5 rounded-bl-full transition-transform group-hover:scale-150 duration-700"></div>
                   
@@ -132,7 +203,6 @@ function Home() {
                   </div>
                 </div>
 
-                {/* CARD DE CONSULTA DE ELEGIBILIDADE  */}
                 <div 
                   onClick={() => navigate('/cadastro')} 
                   className="bg-white p-6 rounded shadow-sm border border-gray-200 hover:border-[#1351B4] transition-colors cursor-pointer group"
@@ -153,12 +223,10 @@ function Home() {
             </div>
           </section>
 
-          {/* --- LINHA SEPARADORA --- */}
           <div className="container mx-auto px-4">
             <div className="h-px bg-gray-200 my-4"></div>
           </div>
 
-          {/* --- SEÇÃO LEI --- */}
           <section className="container mx-auto px-4 py-8">
             <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="grid md:grid-cols-2">
@@ -199,12 +267,10 @@ function Home() {
             </div>
           </section>
 
-          {/* --- LINHA SEPARADORA --- */}
           <div className="container mx-auto px-4">
             <div className="h-px bg-gray-200 my-4"></div>
           </div>
 
-          {/* --- APOIADORES --- */}
           <section className="container mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold text-[#333] mb-8 border-l-8 border-[#1351B4] pl-4">
               Apoiadores do Projeto
@@ -251,12 +317,10 @@ function Home() {
             </div>
           </section>
 
-          {/* --- LINHA SEPARADORA --- */}
           <div className="container mx-auto px-4">
             <div className="h-px bg-gray-200 my-4"></div>
           </div>
 
-          {/* --- SERVIÇOS  --- */}
           <section id="servicos" className="container mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold text-[#333] mb-8 border-l-8 border-[#1351B4] pl-4">
               Serviços Cobertos
@@ -283,8 +347,7 @@ function Home() {
             </div>
           </section>
 
-          {/* --- RODAPÉ GOVERNO SP  --- */}
-          <footer className="bg-[#2D2D2D] text-white mt-12 pt-12 pb-8">
+          <footer className="bg-[#2D2D2D] text-white pt-12 pb-8">
             <div className="container mx-auto px-4">
               <div className="flex flex-col items-center justify-center text-center gap-6">
                 <div>
