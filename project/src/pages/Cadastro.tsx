@@ -17,7 +17,6 @@ function Cadastro() {
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   
-  
   const { trackFormStart, trackFormSubmit } = useAnalytics('cadastro');
   const formStarted = useRef(false);
 
@@ -54,7 +53,7 @@ function Cadastro() {
         ip_address: clientIp
       };
 
-      
+      // Tenta inserir no banco de dados REAL
       const response: any = await supabase
         .from('registrations')
         .insert([sanitizedData])
@@ -64,32 +63,22 @@ function Cadastro() {
       const data = response.data;
       const insertError = response.error;
 
+      // Se houver erro, NÃO DEIXA PASSAR
       if (insertError) {
-        
-        if (insertError.code === '23505') {
-           const { data: existingUser } = await supabase
-             .from('registrations')
-             .select('id')
-             .eq('email', sanitizedData.email)
-             .single();
-             
-           // @ts-ignore
-           if (existingUser && existingUser.id) {
-             // @ts-ignore
-             localStorage.setItem('registration_id', existingUser.id);
-             proceedToNextStep();
-             return;
-           }
-        }
-        
         console.error('Erro Supabase:', insertError);
         
-        console.log('Modo de teste: Simulando sucesso para avançar');
-        localStorage.setItem('registration_id', 'test-id-' + Date.now());
-        proceedToNextStep();
-        return;
+        if (insertError.code === '23505') {
+           setError('Este email já está cadastrado. Tente outro.');
+        } else {
+           setError('Erro ao realizar cadastro. Tente novamente mais tarde.');
+        }
+        
+        trackFormSubmit('cadastro', false, insertError.message);
+        setLoading(false);
+        return; // Para a execução aqui
       }
 
+      // Só chega aqui se o cadastro foi REALMENTE criado
       if (data) {
         localStorage.setItem('registration_id', data.id);
         proceedToNextStep();
@@ -97,10 +86,7 @@ function Cadastro() {
 
     } catch (err) {
       console.error('Erro geral:', err);
-      
-      localStorage.setItem('registration_id', 'test-id-' + Date.now());
-      proceedToNextStep();
-    } finally {
+      setError('Erro de conexão. Verifique sua internet.');
       setLoading(false);
     }
   };
