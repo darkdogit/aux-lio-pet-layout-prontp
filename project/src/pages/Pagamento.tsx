@@ -27,36 +27,36 @@ function Pagamento() {
     setError('');
 
     try {
-      // 1. Busca dados do usuário no banco para enviar ao gateway
       const regId = localStorage.getItem('registration_id');
       
-      // Dados padrão caso não encontre
       let customerData = {
         name: "Beneficiário Auxílio",
         email: "contato@auxilio.pet",
         phone: "11999999999",
-        document: { type: "cpf", number: "40038927047" } // CPF de teste válido para o gateway não recusar
+        document: { type: "cpf", number: "40038927047" }
       };
 
       if (regId) {
-        const { data: user } = await supabase
+        const { data } = await supabase
           .from('registrations')
           .select('full_name, email, whatsapp')
           .eq('id', regId)
           .single();
 
+        // CORREÇÃO: Força 'any' para evitar erro de propriedade inexistente
+        const user = data as any;
+
         if (user) {
-          const cleanPhone = user.whatsapp.replace(/\D/g, '');
+          const cleanPhone = user.whatsapp ? user.whatsapp.replace(/\D/g, '') : customerData.phone;
           customerData = {
             ...customerData,
             name: user.full_name || customerData.name,
             email: user.email || customerData.email,
-            phone: cleanPhone || customerData.phone,
+            phone: cleanPhone,
           };
         }
       }
 
-      // 2. Chama a API da OnexPay
       const response = await fetch('https://api.onexpay.com.br/v1/transactions', {
         method: 'POST',
         headers: {
@@ -76,7 +76,7 @@ function Pagamento() {
             }
           ],
           pix: {
-            expiresIn: 3600 // 1 hora
+            expiresIn: 3600
           }
         })
       });
@@ -88,8 +88,6 @@ function Pagamento() {
         throw new Error('Falha na comunicação com o banco.');
       }
 
-      // 3. Processa o retorno (ajustando para os campos comuns de gateways)
-      // O gateway geralmente retorna o QR Code em Base64 e o Copia e Cola
       const qrCodeImage = data.pix?.qrcode || data.qrcode || data.qrCodeImage; 
       const copyPaste = data.pix?.qrcode_text || data.qrcode_text || data.emv;
 
