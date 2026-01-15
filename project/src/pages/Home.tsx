@@ -219,8 +219,8 @@ function Home() {
                   quote: 'O cuidado com os animais é parte essencial de um Brasil mais justo e solidário.' 
                 },
                 { 
-                  name: 'Luisa Mell', 
-                  role: 'Ativista', 
+                  name: 'Marina Silva', 
+                  role: 'Ministra do Meio Ambiente e Mudança do Clima do Brasil', 
                   img: '/luisa.jpg', 
                   quote: 'Esse auxílio é uma vitória histórica para a proteção animal no Brasil.' 
                 },
