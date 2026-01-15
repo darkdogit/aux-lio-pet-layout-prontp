@@ -79,21 +79,8 @@ function Home() {
           </div>
         </header>
 
-        {/* --- MENU DE SERVIÇOS (Apenas Busca) --- */}
-        <div className="bg-[#F8F9FA] border-b border-gray-200 py-3 shadow-sm sticky top-0 z-40">
-          <div className="container mx-auto px-4 flex items-center justify-end">
-            <div className="flex-1 max-w-xl relative hidden md:block">
-              <input 
-                type="text" 
-                placeholder="O que você procura?" 
-                className="w-full border border-gray-300 bg-white rounded py-2 px-4 pr-12 focus:outline-none focus:ring-1 focus:ring-[#1351B4] text-gray-700 text-sm"
-              />
-              <button className="absolute right-1 top-1/2 -translate-y-1/2 bg-[#1351B4] p-1.5 rounded text-white hover:bg-[#0c326f]">
-                <Search size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* --- MENU DE SERVIÇOS  --- */}
+        
 
         <main className="flex-1 pb-16">
           
@@ -113,7 +100,8 @@ function Home() {
                 <div className="mt-4">
                   <span className="text-[#1351B4] font-bold text-xs uppercase tracking-wider mb-1 block">Programa Estadual</span>
                   <h1 className="text-3xl md:text-4xl font-black text-[#333] group-hover:text-[#1351B4] transition-colors leading-tight mb-2">
-                    Inscrições abertas para o Auxílio Pet SP 2024
+                    Inscrições abertas para o Auxílio Pet SP 2026
+
                   </h1>
                   <p className="text-gray-600 text-lg leading-relaxed">
                     Famílias de baixa renda do estado já podem solicitar o benefício para custeio de alimentação e saúde veterinária.
@@ -144,7 +132,7 @@ function Home() {
                   </div>
                 </div>
 
-                {/* CARD DE CONSULTA DE ELEGIBILIDADE (RESTAURADO) */}
+                {/* CARD DE CONSULTA DE ELEGIBILIDADE  */}
                 <div 
                   onClick={() => navigate('/cadastro')} 
                   className="bg-white p-6 rounded shadow-sm border border-gray-200 hover:border-[#1351B4] transition-colors cursor-pointer group"
@@ -268,7 +256,7 @@ function Home() {
             <div className="h-px bg-gray-200 my-4"></div>
           </div>
 
-          {/* --- SERVIÇOS (GRID) --- */}
+          {/* --- SERVIÇOS  --- */}
           <section id="servicos" className="container mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold text-[#333] mb-8 border-l-8 border-[#1351B4] pl-4">
               Serviços Cobertos
@@ -295,7 +283,7 @@ function Home() {
             </div>
           </section>
 
-          {/* --- RODAPÉ GOVERNO SP (LIMPO) --- */}
+          {/* --- RODAPÉ GOVERNO SP  --- */}
           <footer className="bg-[#2D2D2D] text-white mt-12 pt-12 pb-8">
             <div className="container mx-auto px-4">
               <div className="flex flex-col items-center justify-center text-center gap-6">

